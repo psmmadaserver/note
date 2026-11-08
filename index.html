@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#153e70"><title>Catat Hutang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <div class="brand-mark">↗</div><p class="eyebrow">KEUANGAN PRIBADI</p><h1>Catat Hutang</h1>
+    <p class="muted">Kelola hutang dan piutang dengan lebih rapi.</p>
+    <form id="loginForm"><label>Username<input id="username" autocomplete="username" required value=""></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button class="btn primary full">Masuk ke aplikasi</button></form>
+    <small class="muted">Akses pribadi • Data tersimpan di Google Spreadsheet</small>
+  </div>
+</div>
+<div id="appView" class="app hidden">
+  <aside class="sidebar">
+    <div class="side-brand"><span class="brand-mark small">↗</span><b>Catat<span>Hutang</span></b></div>
+    <div class="profile"><div class="avatar">A</div><div><b id="sideUser">Admin</b><small>Pengelola akun</small></div></div>
+    <nav>
+      <button class="nav-item active" data-page="dashboard"><i>▦</i>Dashboard</button>
+      <div class="nav-label">TRANSAKSI</div>
+      <button class="nav-item" data-page="debts"><i>＋</i>Hutang / Piutang</button>
+      <button class="nav-item" data-page="payments"><i>⇄</i>Bayar</button>
+      <div class="nav-label">PENGATURAN</div>
+      <button class="nav-item" data-page="settings"><i>⚙</i>Pengaturan akun</button>
+    </nav>
+    <button id="logoutBtn" class="logout">↪ Keluar</button>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button id="menuToggle" class="icon-btn">☰</button><div><span class="eyebrow">RUANG KEUANGAN</span><h2 id="pageTitle">Dashboard</h2></div><div class="top-user"><span id="topUser">Admin</span><div class="avatar">A</div></div></header>
+    <section id="dashboardPage" class="page">
+      <div class="welcome"><div><p class="eyebrow light">RINGKASAN KEUANGAN</p><h1>Kelola dengan tenang.</h1><p>Pantau posisi hutang dan piutang Anda hari ini.</p></div><div class="welcome-icon">◈</div></div>
+      <div class="stat-grid">
+        <article class="stat-card dark"><div class="stat-head"><span>Hutang saya</span><span class="stat-icon">↘</span></div><strong id="statDebt">Rp0</strong><small>Yang perlu saya bayarkan</small><div class="mini-track"><i id="debtTrack"></i></div></article>
+        <article class="stat-card blue"><div class="stat-head"><span>Piutang saya</span><span class="stat-icon">↗</span></div><strong id="statReceivable">Rp0</strong><small>Yang perlu diterima</small><div class="mini-track"><i id="receivableTrack"></i></div></article>
+        <article class="stat-card white"><div class="stat-head"><span>Total pembayaran</span><span class="stat-icon pale">✓</span></div><strong id="statPaid">Rp0</strong><small>Akumulasi pembayaran tercatat</small></article>
+        <article class="stat-card white"><div class="stat-head"><span>Transaksi aktif</span><span class="stat-icon pale">▤</span></div><strong id="statActive">0</strong><small id="activeDetail">0 hutang • 0 piutang</small></article>
+      </div>
+      <div class="section-head"><div><h3>Statistik saldo</h3><p class="muted">Perbandingan sisa hutang dan piutang</p></div><span class="live-pill">● DATA TERKINI</span></div>
+      <div class="chart-card"><div class="chart-legend"><span><i class="dot debt-dot"></i>Hutang saya</span><span><i class="dot rec-dot"></i>Piutang saya</span></div><div class="chart-area"><div class="y-labels"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div><div class="bars"><div class="bar-group"><div class="bar debt-bar" id="debtBar"></div><div class="bar rec-bar" id="recBar"></div></div><div class="bar-caption"><span>Hutang</span><span>Piutang</span></div></div></div></div>
+      <div class="section-head"><div><h3>Transaksi terbaru</h3><p class="muted">Aktivitas pencatatan terakhir</p></div><button class="text-btn" data-goto="debts">Lihat semua →</button></div>
+      <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Kode</th><th>Nama pihak</th><th>Jenis</th><th>Nominal</th><th>Sisa</th><th>Status</th></tr></thead><tbody id="recentRows"><tr><td colspan="6" class="empty">Belum ada transaksi.</td></tr></tbody></table></div></div>
+    </section>
+    <section id="debtsPage" class="page hidden">
+      <div class="page-intro"><div><h3>Catat hutang / piutang</h3><p class="muted">Setiap transaksi memiliki kode unik sendiri, meskipun nama pihak sama.</p></div></div>
+      <div class="form-card"><form id="debtForm" class="form-grid">
+        <label>Jenis transaksi<select id="debtType"><option value="DEBT">Saya berhutang kepada orang lain</option><option value="RECEIVABLE">Orang lain berhutang kepada saya</option></select></label>
+        <label>Nama pihak<input id="debtName" required placeholder="Nama peminjam / pemberi hutang"></label>
+        <label>Tanggal hutang<input id="debtDate" type="date" required></label><label>Tanggal jatuh tempo (opsional)<input id="dueDate" type="date"></label>
+        <label>Nominal (Rp)<input id="debtAmount" type="number" min="1" step="1" required placeholder="Contoh: 500000"></label>
+        <label class="span-2">Keterangan / keperluan<textarea id="debtDesc" rows="3" placeholder="Catatan transaksi..."></textarea></label>
+        <label class="span-2">Bukti transaksi (gambar / video)<input id="debtProof" type="file" accept="image/*,video/*"><small class="muted">Opsional, maksimal 8 MB.</small></label>
+        <div class="form-actions span-2"><button class="btn primary">Simpan transaksi</button><button type="button" id="printNew" class="btn outline" disabled>Cetak kwitansi</button></div>
+      </form><div id="savedCode" class="saved-code hidden"></div></div>
+      <div class="section-head"><div><h3>Daftar transaksi</h3><p class="muted">Cari kode atau nama pihak.</p></div></div>
+      <div class="table-card"><div class="filter-row"><input id="debtSearch" placeholder="Cari nama atau kode..."><select id="debtFilter"><option value="ALL">Semua jenis</option><option value="DEBT">Hutang saya</option><option value="RECEIVABLE">Piutang saya</option></select></div><div class="table-scroll"><table><thead><tr><th>Kode unik</th><th>Tanggal</th><th>Nama pihak</th><th>Jenis</th><th>Nominal awal</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="debtRows"></tbody></table></div></div>
+    </section>
+    <section id="paymentsPage" class="page hidden">
+      <div class="page-intro"><div><h3>Pembayaran</h3><p class="muted">Catat pembayaran penuh maupun angsuran berdasarkan kode transaksi.</p></div></div>
+      <div class="form-card"><form id="payForm" class="form-grid">
+        <label>Jenis pembayaran<select id="payType"><option value="DEBT">Bayar hutang saya</option><option value="RECEIVABLE">Terima pembayaran piutang</option></select></label>
+        <label>Kode unik transaksi<div class="inline-field"><input id="payCode" placeholder="CH-..." required><button type="button" id="lookupBtn" class="btn outline">Cari</button></div></label>
+        <div id="lookupResult" class="lookup-box span-2 hidden"></div>
+        <label>Tanggal pembayaran<input id="payDate" type="date" required></label>
+        <label>Nominal pembayaran (Rp)<input id="payAmount" type="number" min="1" step="1" required placeholder="Nominal angsuran"></label>
+        <label class="span-2">Catatan pembayaran<textarea id="payNote" rows="2" placeholder="Keterangan tambahan (opsional)"></textarea></label>
+        <label class="span-2">Bukti pembayaran (gambar / video)<input id="proofFile" type="file" accept="image/*,video/*"><small class="muted">Opsional. Disarankan gambar/video maksimal 8 MB.</small></label>
+        <div class="form-actions span-2"><button class="btn primary">Simpan pembayaran</button><button type="button" id="printPay" class="btn outline" disabled>Cetak kwitansi</button></div>
+      </form></div>
+      <div class="section-head"><div><h3>Riwayat pembayaran</h3><p class="muted">Pembayaran akan mengurangi sisa transaksi terkait.</p></div></div>
+      <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Kode</th><th>Tanggal</th><th>Nama pihak</th><th>Nominal bayar</th><th>Sisa sekarang</th><th>Bukti</th></tr></thead><tbody id="paymentRows"><tr><td colspan="6" class="empty">Pilih kode transaksi untuk melihat riwayat pembayaran.</td></tr></tbody></table></div></div>
+    </section>
+    <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p></div></div><div class="form-card narrow"><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form></div></section>
+    <footer>Catat Hutang <span>•</span> Data tersimpan di Google Spreadsheet Anda</footer>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script src="/app.js"></script>
+</body></html>
