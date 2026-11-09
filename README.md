@@ -61,3 +61,20 @@ Segera login dan buka Pengaturan akun untuk mengganti password awal.
 - Bukti video/gambar disimpan di Google Drive dengan tautan akses. Jangan unggah dokumen yang berisi data sangat rahasia jika tautan publik tidak sesuai kebutuhan.
 - Ini aplikasi pencatatan sederhana, bukan sistem akuntansi/audit. Simpan salinan spreadsheet secara berkala.
 - Bila terjadi error izin, jalankan ulang `setupApp()` dan pastikan deployment Web App memakai **Execute as Me**.
+
+
+## Update versi Project + dropdown kode transaksi
+Jika Anda sudah memakai versi sebelumnya:
+1. Upload file `Code.gs` versi terbaru ke project Apps Script (gantikan isi file lama).
+2. Jalankan `setupApp()` sekali lagi. Fungsi ini **tidak menghapus sheet/data lama**; hanya menambahkan sheet baru `Project Masuk` dan `Project Keluar` bila belum tersedia.
+3. Deploy > Manage deployments > Edit (ikon pensil) > pilih **New version** > Deploy. URL `/exec` biasanya tetap sama.
+4. Upload/replace `index.html`, `app.js`, dan `style.css` di repository GitHub. File `api/gas.js` dan `vercel.json` tidak perlu diubah.
+5. Tunggu Vercel selesai redeploy. Jika tampilan lama masih muncul, lakukan hard refresh browser.
+
+### Alur Project
+- Simpan **Uang Masuk**. Sistem menghasilkan kode sumber `PM-...`.
+- Untuk mencatat **Uang Keluar**, pilih kode uang masuk pada dropdown. Nama project dan sisa dana tampil otomatis.
+- Pengeluaran ditautkan ke satu kode uang masuk tertentu; tanggal keluar boleh berbeda dari tanggal masuk.
+- Total pengeluaran tidak boleh melebihi sisa dana pada sumber tersebut.
+- Tombol detail/kwitansi pada daftar uang masuk mencetak ringkasan sumber dana beserta riwayat pengeluarannya.
+- Data project berada pada dua sheet baru: `Project Masuk` dan `Project Keluar`.

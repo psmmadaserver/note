@@ -24,6 +24,7 @@
       <div class="nav-label">TRANSAKSI</div>
       <button class="nav-item" data-page="debts"><i>＋</i>Hutang / Piutang</button>
       <button class="nav-item" data-page="payments"><i>⇄</i>Bayar</button>
+      <button class="nav-item" data-page="projects"><i>▣</i>Project</button>
       <div class="nav-label">PENGATURAN</div>
       <button class="nav-item" data-page="settings"><i>⚙</i>Pengaturan akun</button>
     </nav>
@@ -62,7 +63,7 @@
       <div class="page-intro"><div><h3>Pembayaran</h3><p class="muted">Catat pembayaran penuh maupun angsuran berdasarkan kode transaksi.</p></div></div>
       <div class="form-card"><form id="payForm" class="form-grid">
         <label>Jenis pembayaran<select id="payType"><option value="DEBT">Bayar hutang saya</option><option value="RECEIVABLE">Terima pembayaran piutang</option></select></label>
-        <label>Kode unik transaksi<div class="inline-field"><input id="payCode" placeholder="CH-..." required><button type="button" id="lookupBtn" class="btn outline">Cari</button></div></label>
+        <label>Kode unik transaksi<div class="inline-field"><input id="payCode" placeholder="Cari kode unik atau nama pihak..." autocomplete="off" required><button type="button" id="lookupBtn" class="btn outline">Cari</button></div><div id="debtCodeDropdown" class="suggestions hidden"></div></label>
         <div id="lookupResult" class="lookup-box span-2 hidden"></div>
         <label>Tanggal pembayaran<input id="payDate" type="date" required></label>
         <label>Nominal pembayaran (Rp)<input id="payAmount" type="number" min="1" step="1" required placeholder="Nominal angsuran"></label>
@@ -72,6 +73,47 @@
       </form></div>
       <div class="section-head"><div><h3>Riwayat pembayaran</h3><p class="muted">Pembayaran akan mengurangi sisa transaksi terkait.</p></div></div>
       <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Kode</th><th>Tanggal</th><th>Nama pihak</th><th>Nominal bayar</th><th>Sisa sekarang</th><th>Bukti</th></tr></thead><tbody id="paymentRows"><tr><td colspan="6" class="empty">Pilih kode transaksi untuk melihat riwayat pembayaran.</td></tr></tbody></table></div></div>
+    </section>
+
+    <section id="projectsPage" class="page hidden">
+      <div class="page-intro"><div><h3>Manajemen project</h3><p class="muted">Catat dana masuk, lalu hubungkan setiap pengeluaran ke sumber dana masuk yang tepat.</p></div></div>
+      <div class="project-stats">
+        <article class="project-stat"><small>Total uang masuk</small><strong id="projectTotalIn">Rp0</strong></article>
+        <article class="project-stat"><small>Total uang keluar</small><strong id="projectTotalOut">Rp0</strong></article>
+        <article class="project-stat"><small>Sisa dana project</small><strong id="projectBalance">Rp0</strong></article>
+        <article class="project-stat"><small>Sumber dana aktif</small><strong id="projectActive">0</strong></article>
+      </div>
+      <div class="project-columns">
+        <div class="form-card">
+          <div class="form-title"><span class="form-symbol income-symbol">↓</span><div><h3>Uang masuk</h3><p class="muted">Daftarkan dana yang diterima untuk sebuah project.</p></div></div>
+          <form id="projectIncomeForm">
+            <label>Tanggal<input id="projectInDate" type="date" required></label>
+            <label>Nama project<input id="projectInName" required placeholder="Contoh: Renovasi rumah"></label>
+            <label>Nominal uang masuk (Rp)<input id="projectInAmount" type="number" min="1" step="1" required placeholder="Masukkan nominal"></label>
+            <label>Keterangan<textarea id="projectInNote" rows="2" placeholder="Asal dana / catatan (opsional)"></textarea></label>
+            <label>Bukti uang masuk (opsional)<input id="projectInProof" type="file" accept="image/*,video/*"><small class="muted">Maksimal 8 MB.</small></label>
+            <button class="btn primary">Simpan uang masuk</button>
+          </form>
+          <div id="projectIncomeSaved" class="saved-code hidden"></div>
+        </div>
+        <div class="form-card">
+          <div class="form-title"><span class="form-symbol expense-symbol">↑</span><div><h3>Uang keluar</h3><p class="muted">Pilih sumber uang masuk agar arus dana tetap satu jalur.</p></div></div>
+          <form id="projectExpenseForm">
+            <label>Pilih sumber uang masuk<select id="projectSource" required><option value="">Memuat sumber dana...</option></select></label>
+            <div id="projectSourceInfo" class="lookup-box hidden"></div>
+            <label>Tanggal uang keluar<input id="projectOutDate" type="date" required></label>
+            <label>Nominal uang keluar (Rp)<input id="projectOutAmount" type="number" min="1" step="1" required placeholder="Masukkan nominal"></label>
+            <label>Keterangan / keperluan<textarea id="projectOutNote" rows="2" placeholder="Keperluan pengeluaran"></textarea></label>
+            <label>Bukti uang keluar (opsional)<input id="projectOutProof" type="file" accept="image/*,video/*"><small class="muted">Maksimal 8 MB.</small></label>
+            <button class="btn primary">Simpan uang keluar</button>
+          </form>
+          <div id="projectExpenseSaved" class="saved-code hidden"></div>
+        </div>
+      </div>
+      <div class="section-head"><div><h3>Daftar uang masuk project</h3><p class="muted">Setiap sumber dana memiliki kode tersendiri untuk mengaitkan pengeluaran.</p></div></div>
+      <div class="table-card"><div class="filter-row"><input id="projectSearch" placeholder="Cari nama project atau kode..."></div><div class="table-scroll"><table><thead><tr><th>Kode uang masuk</th><th>Tanggal</th><th>Nama project</th><th>Nominal masuk</th><th>Sudah keluar</th><th>Sisa dana</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="projectIncomeRows"><tr><td colspan="8" class="empty">Belum ada uang masuk.</td></tr></tbody></table></div></div>
+      <div class="section-head"><div><h3>Riwayat uang keluar</h3><p class="muted">Pengeluaran tercatat sesuai kode sumber uang masuk.</p></div></div>
+      <div class="table-card"><div class="table-scroll"><table><thead><tr><th>ID pengeluaran</th><th>Kode sumber</th><th>Tanggal</th><th>Nama project</th><th>Nominal keluar</th><th>Keterangan</th><th>Bukti</th></tr></thead><tbody id="projectExpenseRows"><tr><td colspan="7" class="empty">Belum ada uang keluar.</td></tr></tbody></table></div></div>
     </section>
     <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p></div></div><div class="form-card narrow"><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form></div></section>
     <footer>Catat Hutang <span>•</span> Data tersimpan di Google Spreadsheet Anda</footer>
