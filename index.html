@@ -18,7 +18,7 @@
 <div id="appView" class="app hidden">
   <aside class="sidebar">
     <div class="side-brand"><span class="brand-mark small">↗</span><b>Catat<span>Hutang</span></b></div>
-    <div class="profile"><div class="avatar"><img class="app-logo" alt="Logo aplikasi"><span class="avatar-fallback">A</span></div><div><b id="sideUser">Admin</b><small>Pengelola akun</small></div></div>
+    <span id="sideUser" class="hidden" aria-hidden="true"></span>
     <nav>
       <button class="nav-item active" data-page="dashboard"><i>▦</i>Dashboard</button>
       <div class="nav-label">TRANSAKSI</div>
@@ -46,7 +46,7 @@
       <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Kode</th><th>Nama pihak</th><th>Jenis</th><th>Nominal</th><th>Sisa</th><th>Status</th></tr></thead><tbody id="recentRows"><tr><td colspan="6" class="empty">Belum ada transaksi.</td></tr></tbody></table></div></div>
     </section>
     <section id="debtsPage" class="page hidden">
-      <div class="page-intro"><div><h3>Catat hutang / piutang</h3></div></div>
+      
       <div class="form-card"><form id="debtForm" class="form-grid">
         <label>Jenis transaksi<select id="debtType"><option value="DEBT">Saya berhutang kepada orang lain</option><option value="RECEIVABLE">Orang lain berhutang kepada saya</option></select></label>
         <label>Nama pihak<input id="debtName" required placeholder="Nama peminjam / pemberi hutang"></label>
@@ -60,7 +60,7 @@
       <div class="table-card"><div class="filter-row"><input id="debtSearch" placeholder="Cari nama atau kode..."><select id="debtFilter"><option value="ALL">Semua jenis</option><option value="DEBT">Hutang saya</option><option value="RECEIVABLE">Piutang saya</option></select></div><div class="table-scroll"><table><thead><tr><th>Kode unik</th><th>Tanggal</th><th>Nama pihak</th><th>Jenis</th><th>Nominal awal</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="debtRows"></tbody></table></div></div>
     </section>
     <section id="paymentsPage" class="page hidden">
-      <div class="page-intro"><div><h3>Pembayaran</h3></div></div>
+      
       <div class="form-card"><form id="payForm" class="form-grid">
         <label>Jenis pembayaran<select id="payType"><option value="DEBT">Bayar hutang saya</option><option value="RECEIVABLE">Terima pembayaran piutang</option></select></label>
         <label>Kode unik transaksi<div class="inline-field"><input id="payCode" placeholder="Cari kode unik atau nama pihak..." autocomplete="off" required><button type="button" id="lookupBtn" class="btn outline">Cari</button></div><div id="debtCodeDropdown" class="suggestions hidden"></div></label>
@@ -76,7 +76,7 @@
     </section>
 
     <section id="projectsPage" class="page hidden">
-      <div class="page-intro"><div><h3>Manajemen project</h3></div></div>
+      
       <div class="project-stats">
         <article class="project-stat"><small>Total uang masuk</small><strong id="projectTotalIn">Rp0</strong></article>
         <article class="project-stat"><small>Total uang keluar</small><strong id="projectTotalOut">Rp0</strong></article>
@@ -84,8 +84,8 @@
         <article class="project-stat"><small>Sumber dana aktif</small><strong id="projectActive">0</strong></article>
       </div>
       <div class="project-columns">
-        <div class="form-card">
-          <div class="form-title"><span class="form-symbol income-symbol">↓</span><div><h3>Uang masuk</h3><p class="muted">Daftarkan dana yang diterima untuk sebuah project.</p></div></div>
+        <details class="form-card project-dropdown">
+          <summary class="form-title project-dropdown-toggle"><span class="form-symbol income-symbol">↓</span><div><h3>Uang masuk</h3><p class="muted">Klik untuk membuka form pencatatan uang masuk.</p></div><span class="project-toggle-chevron" aria-hidden="true">⌄</span></summary>
           <form id="projectIncomeForm">
             <label>Tanggal<input id="projectInDate" type="date" required></label>
             <label>Nama project<input id="projectInName" required placeholder="Contoh: Renovasi rumah"></label>
@@ -95,9 +95,9 @@
             <button class="btn primary">Simpan uang masuk</button>
           </form>
           <div id="projectIncomeSaved" class="saved-code hidden"></div>
-        </div>
-        <div class="form-card">
-          <div class="form-title"><span class="form-symbol expense-symbol">↑</span><div><h3>Uang keluar</h3><p class="muted">Pilih sumber uang masuk agar arus dana tetap satu jalur.</p></div></div>
+        </details>
+        <details class="form-card project-dropdown">
+          <summary class="form-title project-dropdown-toggle"><span class="form-symbol expense-symbol">↑</span><div><h3>Uang keluar</h3><p class="muted">Klik untuk membuka form pencatatan uang keluar.</p></div><span class="project-toggle-chevron" aria-hidden="true">⌄</span></summary>
           <form id="projectExpenseForm">
             <label>Pilih sumber uang masuk<select id="projectSource" required><option value="">Memuat sumber dana...</option></select></label>
             <div id="projectSourceInfo" class="lookup-box hidden"></div>
@@ -108,7 +108,7 @@
             <button class="btn primary">Simpan uang keluar</button>
           </form>
           <div id="projectExpenseSaved" class="saved-code hidden"></div>
-        </div>
+        </details>
       </div>
       <div class="section-head"><div><h3>Daftar uang masuk project</h3><p class="muted">Setiap sumber dana memiliki kode tersendiri untuk mengaitkan pengeluaran.</p></div></div>
       <div class="table-card"><div class="filter-row"><input id="projectSearch" placeholder="Cari nama project atau kode..."></div><div class="table-scroll"><table><thead><tr><th>Kode uang masuk</th><th>Tanggal</th><th>Nama project</th><th>Nominal masuk</th><th>Sudah keluar</th><th>Sisa dana</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="projectIncomeRows"><tr><td colspan="8" class="empty">Belum ada uang masuk.</td></tr></tbody></table></div></div>
