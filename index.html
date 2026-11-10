@@ -10,8 +10,7 @@
 <div id="loginView" class="login-wrap">
   <div class="login-orbit orbit-one"></div><div class="login-orbit orbit-two"></div>
   <div class="login-card">
-    <div class="login-brand"><div class="brand-mark brand-logo"><img class="app-logo" alt="Logo aplikasi"><span class="logo-fallback">↗</span></div><span>RUANG KEUANGAN</span></div><p class="eyebrow">PRIVATE FINANCE</p><h1>Selamat datang<br><em>kembali.</em></h1>
-    <p class="muted">Kelola hutang, piutang, dan project Anda dalam satu tempat.</p>
+    <div class="login-brand"><div class="brand-mark brand-logo"><img class="app-logo" alt="Logo aplikasi"><span class="logo-fallback">↗</span></div><span>RUANG KEUANGAN</span></div>
     <form id="loginForm"><label>Username<input id="username" autocomplete="username" required value=""></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button class="btn primary full">Masuk ke aplikasi</button></form>
     <div class="login-foot"><span class="secure-dot"></span><small>Akses pribadi dan aman</small><small>•</small><small>Google Spreadsheet</small></div>
   </div>
@@ -47,7 +46,7 @@
       <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Kode</th><th>Nama pihak</th><th>Jenis</th><th>Nominal</th><th>Sisa</th><th>Status</th></tr></thead><tbody id="recentRows"><tr><td colspan="6" class="empty">Belum ada transaksi.</td></tr></tbody></table></div></div>
     </section>
     <section id="debtsPage" class="page hidden">
-      <div class="page-intro"><div><h3>Catat hutang / piutang</h3><p class="muted">Setiap transaksi memiliki kode unik sendiri, meskipun nama pihak sama.</p></div></div>
+      <div class="page-intro"><div><h3>Catat hutang / piutang</h3></div></div>
       <div class="form-card"><form id="debtForm" class="form-grid">
         <label>Jenis transaksi<select id="debtType"><option value="DEBT">Saya berhutang kepada orang lain</option><option value="RECEIVABLE">Orang lain berhutang kepada saya</option></select></label>
         <label>Nama pihak<input id="debtName" required placeholder="Nama peminjam / pemberi hutang"></label>
@@ -61,7 +60,7 @@
       <div class="table-card"><div class="filter-row"><input id="debtSearch" placeholder="Cari nama atau kode..."><select id="debtFilter"><option value="ALL">Semua jenis</option><option value="DEBT">Hutang saya</option><option value="RECEIVABLE">Piutang saya</option></select></div><div class="table-scroll"><table><thead><tr><th>Kode unik</th><th>Tanggal</th><th>Nama pihak</th><th>Jenis</th><th>Nominal awal</th><th>Sisa</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="debtRows"></tbody></table></div></div>
     </section>
     <section id="paymentsPage" class="page hidden">
-      <div class="page-intro"><div><h3>Pembayaran</h3><p class="muted">Catat pembayaran penuh maupun angsuran berdasarkan kode transaksi.</p></div></div>
+      <div class="page-intro"><div><h3>Pembayaran</h3></div></div>
       <div class="form-card"><form id="payForm" class="form-grid">
         <label>Jenis pembayaran<select id="payType"><option value="DEBT">Bayar hutang saya</option><option value="RECEIVABLE">Terima pembayaran piutang</option></select></label>
         <label>Kode unik transaksi<div class="inline-field"><input id="payCode" placeholder="Cari kode unik atau nama pihak..." autocomplete="off" required><button type="button" id="lookupBtn" class="btn outline">Cari</button></div><div id="debtCodeDropdown" class="suggestions hidden"></div></label>
@@ -77,7 +76,7 @@
     </section>
 
     <section id="projectsPage" class="page hidden">
-      <div class="page-intro"><div><h3>Manajemen project</h3><p class="muted">Catat dana masuk, lalu hubungkan setiap pengeluaran ke sumber dana masuk yang tepat.</p></div></div>
+      <div class="page-intro"><div><h3>Manajemen project</h3></div></div>
       <div class="project-stats">
         <article class="project-stat"><small>Total uang masuk</small><strong id="projectTotalIn">Rp0</strong></article>
         <article class="project-stat"><small>Total uang keluar</small><strong id="projectTotalOut">Rp0</strong></article>
@@ -116,7 +115,7 @@
       <div class="section-head"><div><h3>Riwayat uang keluar</h3><p class="muted">Pengeluaran tercatat sesuai kode sumber uang masuk.</p></div></div>
       <div class="table-card"><div class="table-scroll"><table><thead><tr><th>ID pengeluaran</th><th>Kode sumber</th><th>Tanggal</th><th>Nama project</th><th>Nominal keluar</th><th>Keterangan</th><th>Bukti</th></tr></thead><tbody id="projectExpenseRows"><tr><td colspan="7" class="empty">Belum ada uang keluar.</td></tr></tbody></table></div></div>
     </section>
-    <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3><p class="muted">Kelola identitas aplikasi dan keamanan akun.</p></div></div><div class="form-card narrow logo-settings"><h3>Logo aplikasi</h3><p class="muted">Logo akan tampil di halaman login dan ikon profil.</p><div class="logo-preview"><img id="logoPreview" alt="Pratinjau logo"><span id="logoPreviewFallback">↗</span></div><label>Unggah logo (PNG, JPG, atau WebP)<input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp"><small class="muted">Disarankan gambar persegi, maksimal 1 MB.</small></label><div class="logo-actions"><button type="button" id="saveLogoBtn" class="btn primary">Simpan logo</button><button type="button" id="removeLogoBtn" class="btn outline">Hapus logo</button></div></div><div class="form-card narrow"><h3>Keamanan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form><button type="button" id="settingsLogoutBtn" class="btn outline settings-logout">Keluar dari akun</button></div></section>
+    <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3></div></div><div class="form-card narrow logo-settings"><h3>Logo aplikasi</h3><p class="muted">Logo akan tampil di halaman login dan ikon profil.</p><div class="logo-preview"><img id="logoPreview" alt="Pratinjau logo"><span id="logoPreviewFallback">↗</span></div><label>Unggah logo (PNG, JPG, atau WebP)<input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp"><small class="muted">Disarankan gambar persegi, maksimal 1 MB.</small></label><div class="logo-actions"><button type="button" id="saveLogoBtn" class="btn primary">Simpan logo</button><button type="button" id="removeLogoBtn" class="btn outline">Hapus logo</button></div></div><div class="form-card narrow"><h3>Keamanan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form><button type="button" id="settingsLogoutBtn" class="btn outline settings-logout">Keluar dari akun</button></div></section>
     <footer>Catat Hutang <span>•</span> Data tersimpan di Google Spreadsheet Anda</footer>
   </main>
   <nav class="mobile-bottom-nav" aria-label="Navigasi utama">

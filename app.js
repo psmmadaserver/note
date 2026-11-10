@@ -24,6 +24,7 @@ async function loadDashboard(){try{const r=await api("dashboard");if(!r.ok)throw
 }catch(e){toast(e.message)}}
 function setRing(id,pct,c1,c2){const el=$(id);if(el)el.style.setProperty("--ring-fill",`conic-gradient(from -90deg, ${c1}, ${c2} ${Math.max(0,Math.min(100,pct))}%, #edf1f7 ${Math.max(0,Math.min(100,pct))}% 100%)`);}
 function renderBalanceChart(data){
+  data=[...(data||[])].sort((a,b)=>String(a.name||"").trim().localeCompare(String(b.name||"").trim(),"id-ID",{sensitivity:"base",numeric:true}));
   const svgW=720,top=18,bottom=219,left=14,right=706,step=(right-left)/Math.max(1,data.length-1);
   const maxVal=Math.max(1,...data.map(x=>Math.max(Number(x.debt)||0,Number(x.receivable)||0)))*1.15;
   const y=v=>bottom-(Number(v||0)/maxVal)*(bottom-top);

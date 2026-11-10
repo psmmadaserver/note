@@ -64,3 +64,7 @@
 .pwa-install-bar{position:fixed;z-index:80;left:50%;bottom:18px;transform:translateX(-50%);width:min(94vw,520px);display:flex;align-items:center;gap:12px;padding:12px 14px;background:#ffffffed;border:1px solid #cdeafa;border-radius:16px;box-shadow:0 12px 40px #17486b2b;backdrop-filter:blur(16px);font-size:12px;color:#245777}.pwa-install-bar span{flex:1}.pwa-install-bar>button:last-child{border:0;background:transparent;font-size:22px;color:#789;line-height:1}
 @media(max-width:600px){.loader-shell{gap:13px;padding:10px}.loader-orbit{width:96px;height:96px;flex-basis:96px}.loader-core{width:62px;height:62px}.loader-core strong{font-size:18px}.loader-bars{height:38px}.loader-panel{padding:10px}.pwa-install-bar{bottom:calc(84px + env(safe-area-inset-bottom));font-size:10px}.topbar{margin-left:-14px;margin-right:-14px}}
 @media(prefers-reduced-motion:reduce){.login-wrap,.login-wrap:before,.login-wrap:after,.loader-orbit,.loader-orbit:before,.loader-orbit:after,.loader-bars i{animation:none!important}}
+
+
+/* Login brand size adjusted while preserving original color. */
+.login-brand>span{font-size:12px;color:#91a1b8;letter-spacing:2px}
