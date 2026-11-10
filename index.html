@@ -8,11 +8,12 @@
 </head>
 <body>
 <div id="loginView" class="login-wrap">
+  <div class="login-orbit orbit-one"></div><div class="login-orbit orbit-two"></div>
   <div class="login-card">
-    <div class="brand-mark">↗</div><p class="eyebrow">KEUANGAN PRIBADI</p><h1>Catat Hutang</h1>
-    <p class="muted">Kelola hutang dan piutang dengan lebih rapi.</p>
+    <div class="login-brand"><div class="brand-mark">↗</div><span>RUANG KEUANGAN</span></div><p class="eyebrow">PRIVATE FINANCE</p><h1>Selamat datang<br><em>kembali.</em></h1>
+    <p class="muted">Kelola hutang, piutang, dan project Anda dalam satu tempat.</p>
     <form id="loginForm"><label>Username<input id="username" autocomplete="username" required value=""></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button class="btn primary full">Masuk ke aplikasi</button></form>
-    <small class="muted">Akses pribadi • Data tersimpan di Google Spreadsheet</small>
+    <div class="login-foot"><span class="secure-dot"></span><small>Akses pribadi dan aman</small><small>•</small><small>Google Spreadsheet</small></div>
   </div>
 </div>
 <div id="appView" class="app hidden">
@@ -34,14 +35,14 @@
     <header class="topbar"><button id="menuToggle" class="icon-btn">☰</button><div><span class="eyebrow">RUANG KEUANGAN</span><h2 id="pageTitle">Dashboard</h2></div><div class="top-user"><span id="topUser">Admin</span><div class="avatar">A</div></div></header>
     <section id="dashboardPage" class="page">
       <div class="welcome"><div><p class="eyebrow light">RINGKASAN KEUANGAN</p><h1>Kelola dengan tenang.</h1><p>Pantau posisi hutang dan piutang Anda hari ini.</p></div><div class="welcome-icon">◈</div></div>
-      <div class="stat-grid">
-        <article class="stat-card dark"><div class="stat-head"><span>Hutang saya</span><span class="stat-icon">↘</span></div><strong id="statDebt">Rp0</strong><small>Yang perlu saya bayarkan</small><div class="mini-track"><i id="debtTrack"></i></div></article>
-        <article class="stat-card blue"><div class="stat-head"><span>Piutang saya</span><span class="stat-icon">↗</span></div><strong id="statReceivable">Rp0</strong><small>Yang perlu diterima</small><div class="mini-track"><i id="receivableTrack"></i></div></article>
-        <article class="stat-card white"><div class="stat-head"><span>Total pembayaran</span><span class="stat-icon pale">✓</span></div><strong id="statPaid">Rp0</strong><small>Akumulasi pembayaran tercatat</small></article>
-        <article class="stat-card white"><div class="stat-head"><span>Transaksi aktif</span><span class="stat-icon pale">▤</span></div><strong id="statActive">0</strong><small id="activeDetail">0 hutang • 0 piutang</small></article>
+      <div class="stat-grid ring-grid">
+        <article class="ring-card ring-debt"><div class="ring-top"><span>Hutang saya</span><span class="ring-icon">↘</span></div><div class="ring-body"><div class="ring-chart" id="debtRing"><div class="ring-core"><strong id="statDebt">Rp0</strong><small>Perlu dibayar</small></div></div></div><div class="ring-foot"><span class="ring-dot"></span>Saldo hutang aktif</div></article>
+        <article class="ring-card ring-receivable"><div class="ring-top"><span>Piutang saya</span><span class="ring-icon">↗</span></div><div class="ring-body"><div class="ring-chart" id="receivableRing"><div class="ring-core"><strong id="statReceivable">Rp0</strong><small>Perlu diterima</small></div></div></div><div class="ring-foot"><span class="ring-dot"></span>Saldo piutang aktif</div></article>
+        <article class="ring-card ring-paid"><div class="ring-top"><span>Total pembayaran</span><span class="ring-icon">✓</span></div><div class="ring-body"><div class="ring-chart" id="paidRing"><div class="ring-core"><strong id="statPaid">Rp0</strong><small>Sudah dibayar</small></div></div></div><div class="ring-foot"><span class="ring-dot"></span>Akumulasi pembayaran</div></article>
+        <article class="ring-card ring-active"><div class="ring-top"><span>Transaksi aktif</span><span class="ring-icon">▤</span></div><div class="ring-body"><div class="ring-chart" id="activeRing"><div class="ring-core"><strong id="statActive">0</strong><small>Transaksi terbuka</small></div></div></div><div class="ring-foot"><span class="ring-dot"></span><span id="activeDetail">0 hutang • 0 piutang</span></div></article>
       </div>
       <div class="section-head"><div><h3>Statistik saldo</h3><p class="muted">Perbandingan sisa hutang dan piutang</p></div><span class="live-pill">● DATA TERKINI</span></div>
-      <div class="chart-card"><div class="chart-legend"><span><i class="dot debt-dot"></i>Hutang saya</span><span><i class="dot rec-dot"></i>Piutang saya</span></div><div class="chart-area"><div class="y-labels"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div><div class="bars"><div class="bar-group"><div class="bar debt-bar" id="debtBar"></div><div class="bar rec-bar" id="recBar"></div></div><div class="bar-caption"><span>Hutang</span><span>Piutang</span></div></div></div></div>
+      <div class="chart-card balance-chart-card"><div class="chart-legend"><span><i class="dot debt-dot"></i>Hutang saya</span><span><i class="dot rec-dot"></i>Piutang saya</span><span class="chart-note">Riwayat saldo 6 bulan</span></div><div class="line-chart-wrap"><div class="chart-y-axis" id="chartYAxis"><span>—</span><span>—</span><span>—</span><span>—</span></div><svg id="balanceChart" viewBox="0 0 720 250" preserveAspectRatio="none" role="img" aria-label="Grafik riwayat saldo hutang dan piutang"><defs><linearGradient id="debtFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f8fe8" stop-opacity=".34"/><stop offset="100%" stop-color="#4f8fe8" stop-opacity=".015"/></linearGradient><linearGradient id="receivableFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#b46af0" stop-opacity=".28"/><stop offset="100%" stop-color="#b46af0" stop-opacity=".015"/></linearGradient></defs><g class="chart-grid-lines"><line x1="0" y1="18" x2="720" y2="18"/><line x1="0" y1="85" x2="720" y2="85"/><line x1="0" y1="152" x2="720" y2="152"/><line x1="0" y1="219" x2="720" y2="219"/></g><path id="debtArea" class="chart-area-fill" d=""/><path id="receivableArea" class="chart-area-fill" d=""/><path id="debtLine" class="chart-line debt-line" d=""/><path id="receivableLine" class="chart-line receivable-line" d=""/><g id="chartDots"></g></svg><div id="chartXLabels" class="chart-x-labels"></div></div><div class="chart-summary"><div><small>Hutang saat ini</small><b id="chartDebtNow">Rp0</b></div><div><small>Piutang saat ini</small><b id="chartReceivableNow">Rp0</b></div></div></div>
       <div class="section-head"><div><h3>Transaksi terbaru</h3><p class="muted">Aktivitas pencatatan terakhir</p></div><button class="text-btn" data-goto="debts">Lihat semua →</button></div>
       <div class="table-card"><div class="table-scroll"><table><thead><tr><th>Kode</th><th>Nama pihak</th><th>Jenis</th><th>Nominal</th><th>Sisa</th><th>Status</th></tr></thead><tbody id="recentRows"><tr><td colspan="6" class="empty">Belum ada transaksi.</td></tr></tbody></table></div></div>
     </section>
@@ -115,9 +116,16 @@
       <div class="section-head"><div><h3>Riwayat uang keluar</h3><p class="muted">Pengeluaran tercatat sesuai kode sumber uang masuk.</p></div></div>
       <div class="table-card"><div class="table-scroll"><table><thead><tr><th>ID pengeluaran</th><th>Kode sumber</th><th>Tanggal</th><th>Nama project</th><th>Nominal keluar</th><th>Keterangan</th><th>Bukti</th></tr></thead><tbody id="projectExpenseRows"><tr><td colspan="7" class="empty">Belum ada uang keluar.</td></tr></tbody></table></div></div>
     </section>
-    <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p></div></div><div class="form-card narrow"><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form></div></section>
+    <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p></div></div><div class="form-card narrow"><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form><button type="button" id="settingsLogoutBtn" class="btn outline settings-logout">Keluar dari akun</button></div></section>
     <footer>Catat Hutang <span>•</span> Data tersimpan di Google Spreadsheet Anda</footer>
   </main>
+  <nav class="mobile-bottom-nav" aria-label="Navigasi utama">
+    <button class="nav-item active" data-page="dashboard"><i>⌂</i><span>Home</span></button>
+    <button class="nav-item" data-page="debts"><i>＋</i><span>Hutang</span></button>
+    <button class="nav-item" data-page="payments"><i>⇄</i><span>Bayar</span></button>
+    <button class="nav-item" data-page="projects"><i>▣</i><span>Project</span></button>
+    <button class="nav-item" data-page="settings"><i>○</i><span>Akun</span></button>
+  </nav>
 </div>
 <div id="toast" class="toast"></div>
 <script src="/app.js"></script>
