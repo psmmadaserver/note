@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#153e70"><title>Catat Hutang</title>
+<meta name="theme-color" content="#79c9f5"><meta name="description" content="Aplikasi pencatatan hutang, piutang, dan project."><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icons/icon-192.png"><title>Catat Hutang</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 </head>
@@ -10,7 +10,7 @@
 <div id="loginView" class="login-wrap">
   <div class="login-orbit orbit-one"></div><div class="login-orbit orbit-two"></div>
   <div class="login-card">
-    <div class="login-brand"><div class="brand-mark">↗</div><span>RUANG KEUANGAN</span></div><p class="eyebrow">PRIVATE FINANCE</p><h1>Selamat datang<br><em>kembali.</em></h1>
+    <div class="login-brand"><div class="brand-mark brand-logo"><img class="app-logo" alt="Logo aplikasi"><span class="logo-fallback">↗</span></div><span>RUANG KEUANGAN</span></div><p class="eyebrow">PRIVATE FINANCE</p><h1>Selamat datang<br><em>kembali.</em></h1>
     <p class="muted">Kelola hutang, piutang, dan project Anda dalam satu tempat.</p>
     <form id="loginForm"><label>Username<input id="username" autocomplete="username" required value=""></label><label>Password<input id="password" type="password" autocomplete="current-password" required></label><button class="btn primary full">Masuk ke aplikasi</button></form>
     <div class="login-foot"><span class="secure-dot"></span><small>Akses pribadi dan aman</small><small>•</small><small>Google Spreadsheet</small></div>
@@ -19,7 +19,7 @@
 <div id="appView" class="app hidden">
   <aside class="sidebar">
     <div class="side-brand"><span class="brand-mark small">↗</span><b>Catat<span>Hutang</span></b></div>
-    <div class="profile"><div class="avatar">A</div><div><b id="sideUser">Admin</b><small>Pengelola akun</small></div></div>
+    <div class="profile"><div class="avatar"><img class="app-logo" alt="Logo aplikasi"><span class="avatar-fallback">A</span></div><div><b id="sideUser">Admin</b><small>Pengelola akun</small></div></div>
     <nav>
       <button class="nav-item active" data-page="dashboard"><i>▦</i>Dashboard</button>
       <div class="nav-label">TRANSAKSI</div>
@@ -32,7 +32,7 @@
     <button id="logoutBtn" class="logout">↪ Keluar</button>
   </aside>
   <main class="main">
-    <header class="topbar"><button id="menuToggle" class="icon-btn">☰</button><div><span class="eyebrow">RUANG KEUANGAN</span><h2 id="pageTitle">Dashboard</h2></div><div class="top-user"><span id="topUser">Admin</span><div class="avatar">A</div></div></header>
+    <header class="topbar"><button id="menuToggle" class="icon-btn">☰</button><div><span class="eyebrow">RUANG KEUANGAN</span><h2 id="pageTitle">Dashboard</h2></div><div class="top-user"><span id="topUser">Admin</span><div class="avatar"><img class="app-logo" alt="Logo aplikasi"><span class="avatar-fallback">A</span></div></div></header>
     <section id="dashboardPage" class="page">
       <div class="welcome"><div><p class="eyebrow light">RINGKASAN KEUANGAN</p><h1>Kelola dengan tenang.</h1><p>Pantau posisi hutang dan piutang Anda hari ini.</p></div><div class="welcome-icon">◈</div></div>
       <div class="stat-grid ring-grid">
@@ -116,7 +116,7 @@
       <div class="section-head"><div><h3>Riwayat uang keluar</h3><p class="muted">Pengeluaran tercatat sesuai kode sumber uang masuk.</p></div></div>
       <div class="table-card"><div class="table-scroll"><table><thead><tr><th>ID pengeluaran</th><th>Kode sumber</th><th>Tanggal</th><th>Nama project</th><th>Nominal keluar</th><th>Keterangan</th><th>Bukti</th></tr></thead><tbody id="projectExpenseRows"><tr><td colspan="7" class="empty">Belum ada uang keluar.</td></tr></tbody></table></div></div>
     </section>
-    <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p></div></div><div class="form-card narrow"><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form><button type="button" id="settingsLogoutBtn" class="btn outline settings-logout">Keluar dari akun</button></div></section>
+    <section id="settingsPage" class="page hidden"><div class="page-intro"><div><h3>Pengaturan akun</h3><p class="muted">Kelola identitas aplikasi dan keamanan akun.</p></div></div><div class="form-card narrow logo-settings"><h3>Logo aplikasi</h3><p class="muted">Logo akan tampil di halaman login dan ikon profil.</p><div class="logo-preview"><img id="logoPreview" alt="Pratinjau logo"><span id="logoPreviewFallback">↗</span></div><label>Unggah logo (PNG, JPG, atau WebP)<input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp"><small class="muted">Disarankan gambar persegi, maksimal 1 MB.</small></label><div class="logo-actions"><button type="button" id="saveLogoBtn" class="btn primary">Simpan logo</button><button type="button" id="removeLogoBtn" class="btn outline">Hapus logo</button></div></div><div class="form-card narrow"><h3>Keamanan akun</h3><p class="muted">Ubah password login Anda secara berkala.</p><form id="passwordForm"><label>Password lama<input id="oldPassword" type="password" required></label><label>Password baru<input id="newPassword" type="password" minlength="10" required><small class="muted">Minimal 10 karakter.</small></label><label>Ulangi password baru<input id="confirmPassword" type="password" required></label><button class="btn primary">Ubah password</button></form><button type="button" id="settingsLogoutBtn" class="btn outline settings-logout">Keluar dari akun</button></div></section>
     <footer>Catat Hutang <span>•</span> Data tersimpan di Google Spreadsheet Anda</footer>
   </main>
   <nav class="mobile-bottom-nav" aria-label="Navigasi utama">
@@ -128,5 +128,7 @@
   </nav>
 </div>
 <div id="toast" class="toast"></div>
+<div id="loadingScreen" class="loading-screen"><div class="loader-shell"><div class="loader-orbit"><div class="loader-core"><strong id="loadingPercent">00%</strong></div></div><div class="loader-panel"><div class="loader-title">CATAT HUTANG <span>• SYSTEM</span></div><div class="loader-bars"><i></i></div><div class="loader-caption" id="loadingCaption">MENYIAPKAN APLIKASI...</div></div></div></div>
+<div id="pwaInstallBar" class="pwa-install-bar hidden"><span>Pasang Catat Hutang di perangkat Anda</span><button id="pwaInstallBtn" class="btn primary">Instal aplikasi</button><button id="pwaDismissBtn" aria-label="Tutup">×</button></div>
 <script src="/app.js"></script>
 </body></html>

@@ -1,0 +1,17 @@
+{
+  "id": "/",
+  "name": "Catat Hutang",
+  "short_name": "Catat Hutang",
+  "description": "Aplikasi pencatatan hutang, piutang, pembayaran, dan project.",
+  "lang": "id-ID",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eaf8ff",
+  "theme_color": "#79c9f5",
+  "icons": [
+    {"src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
