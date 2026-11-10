@@ -19,7 +19,7 @@ async function loadDashboard(){try{const r=await api("dashboard");if(!r.ok)throw
   const paidPct=s.paid+s.debt+s.receivable?Math.round(s.paid/(s.paid+s.debt+s.receivable)*100):0;
   const activeTotal=s.openDebt+s.openReceivable;const activePct=s.totalTransactions?Math.round(activeTotal/s.totalTransactions*100):0;
   setRing("debtRing",debtPct,"#4f8fe8","#8d5cf6");setRing("receivableRing",recPct,"#1cc7b7","#4389ee");setRing("paidRing",paidPct,"#f7a34b","#ec6db6");setRing("activeRing",activePct,"#8c75ed","#36c7b5");
-  $("chartDebtNow").textContent=money(s.debt);$("chartReceivableNow").textContent=money(s.receivable);renderBalanceChart(r.trend||[]);
+  $("chartDebtNow").textContent=money(s.debt);$("chartReceivableNow").textContent=money(s.receivable);renderBalanceChart(r.parties||[]);
   $("recentRows").innerHTML=r.recent.length?r.recent.map(row=>`<tr><td><strong>${esc(row.code)}</strong></td><td>${esc(row.name)}</td><td>${typeBadge(row.type)}</td><td>${money(row.amount)}</td><td>${money(row.remaining)}</td><td>${statusBadge(row.status)}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Belum ada transaksi.</td></tr>`
 }catch(e){toast(e.message)}}
 function setRing(id,pct,c1,c2){const el=$(id);if(el)el.style.setProperty("--ring-fill",`conic-gradient(from -90deg, ${c1}, ${c2} ${Math.max(0,Math.min(100,pct))}%, #edf1f7 ${Math.max(0,Math.min(100,pct))}% 100%)`);}
@@ -33,8 +33,14 @@ function renderBalanceChart(data){
   const debt=points("debt"),rec=points("receivable");
   $("debtLine").setAttribute("d",path(debt));$("receivableLine").setAttribute("d",path(rec));$("debtArea").setAttribute("d",area(debt));$("receivableArea").setAttribute("d",area(rec));
   $("chartDots").innerHTML=debt.map((p,i)=>`<circle class="chart-dot debt-chart-dot" cx="${p.x}" cy="${p.y}" r="4"/><circle class="chart-dot rec-chart-dot" cx="${rec[i].x}" cy="${rec[i].y}" r="4"/>`).join("");
-  $("chartXLabels").innerHTML=data.map(d=>`<span>${esc(d.label)}</span>`).join("");
+  $("chartXLabels").innerHTML=data.map(d=>`<span title="${esc(d.name)}">${esc(d.name)}</span>`).join("");
   const maxLabel=compactMoney(maxVal);const mid=compactMoney(maxVal/2);$("chartYAxis").innerHTML=`<span>${esc(maxLabel)}</span><span>${esc(mid)}</span><span>Rp0</span>`;
+  const totalDebt=data.reduce((sum,item)=>sum+(Number(item.debt)||0),0);
+  const totalReceivable=data.reduce((sum,item)=>sum+(Number(item.receivable)||0),0);
+  $("chartDebtNow").textContent=money(totalDebt);
+  $("chartReceivableNow").textContent=money(totalReceivable);
+  $("chartDebtNow").previousElementSibling.textContent="Total hutang kepada pihak";
+  $("chartReceivableNow").previousElementSibling.textContent="Total piutang dari pihak";
 }
 function typeBadge(t){return `<span class="badge ${t==="DEBT"?"debt":"rec"}">${t==="DEBT"?"Hutang saya":"Piutang saya"}</span>`}
 function statusBadge(s){return `<span class="badge ${s==="LUNAS"?"paid":"open"}">${s}</span>`}
