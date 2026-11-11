@@ -81,3 +81,34 @@
 .project-dropdown[open] .project-dropdown-toggle{margin-bottom:20px}
 .project-dropdown[open] .project-toggle-chevron{transform:rotate(180deg)}
 .project-dropdown-toggle:focus-visible{outline:2px solid #62b4e8;outline-offset:4px;border-radius:8px}
+
+
+/* Project summary cards: gentle individual gradients and compact layout */
+.project-stats{gap:11px;margin-bottom:13px}
+.project-stat{position:relative;overflow:hidden;min-height:104px;padding:16px 14px 14px 62px;border:1px solid transparent;box-shadow:0 5px 18px rgba(35,75,120,.045);transition:transform .2s ease,box-shadow .2s ease}
+.project-stat:hover{transform:translateY(-2px);box-shadow:0 9px 24px rgba(35,75,120,.09)}
+.project-stat small{font-size:10px;letter-spacing:.1px}
+.project-stat strong{font-size:18px;margin-top:8px}
+.project-stat-icon{position:absolute;left:14px;top:17px;width:36px;height:36px;border-radius:12px;display:grid;place-items:center}
+.project-stat-icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.stat-income{background:linear-gradient(135deg,#e9faf3 0%,#f9fffc 100%);border-color:#d9f2e8}.stat-income .project-stat-icon{background:#d5f3e7;color:#159873}
+.stat-expense{background:linear-gradient(135deg,#fff0ec 0%,#fffaf8 100%);border-color:#f8e4dd}.stat-expense .project-stat-icon{background:#ffe1d7;color:#df8063}
+.stat-balance{background:linear-gradient(135deg,#edf4ff 0%,#fafcff 100%);border-color:#dfeafa}.stat-balance .project-stat-icon{background:#dceaff;color:#3978c5}
+.stat-active{background:linear-gradient(135deg,#f3efff 0%,#fcfbff 100%);border-color:#e9e2fb}.stat-active .project-stat-icon{background:#e8e0ff;color:#8064c9}
+.project-columns{gap:10px}
+.project-dropdown[open] .project-dropdown-toggle{margin-bottom:15px}
+@media(max-width:700px){.project-stats{gap:9px;margin-bottom:12px}.project-stat{min-height:88px;padding:13px 9px 11px 48px;border-radius:14px}.project-stat-icon{left:9px;top:14px;width:29px;height:29px;border-radius:9px}.project-stat-icon svg{width:16px;height:16px}.project-stat strong{font-size:14px;margin-top:6px}.project-stat small{font-size:9px}.project-columns{gap:8px}}
+
+/* Consistent searchable dropdown appearance for transaction and project selects */
+select.fancy-native-select{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.fancy-select{position:relative;width:100%;min-width:0;margin-top:0}
+.fancy-select-input{width:100%;min-height:42px;padding:12px 42px 12px 13px;border:1px solid #dce6f2;border-radius:10px;background:#fbfcfe;color:var(--ink);font:inherit;font-size:12px;cursor:pointer}
+.fancy-select-input::placeholder{color:#7d8da2;opacity:1}
+.fancy-select-input:focus{border-color:#6a9bd2;box-shadow:0 0 0 3px #2865aa14;outline:none}
+.fancy-select:after{content:"";position:absolute;right:16px;top:16px;width:8px;height:8px;border-right:1.8px solid #526b87;border-bottom:1.8px solid #526b87;transform:rotate(45deg);pointer-events:none;transition:transform .18s}
+.fancy-select.is-open:after{transform:rotate(225deg);top:19px}
+.fancy-select-menu{position:absolute;left:0;right:0;top:calc(100% + 7px);z-index:35;max-height:250px;overflow:auto;padding:5px;background:#fff;border:1px solid #dce6f1;border-radius:12px;box-shadow:0 14px 32px rgba(25,55,90,.14)}
+.fancy-select-option{display:block;width:100%;padding:11px 12px;border:0;border-radius:8px;background:transparent;text-align:left;color:#29435f;font:inherit;font-size:11px;line-height:1.45;cursor:pointer}
+.fancy-select-option:hover,.fancy-select-option[aria-selected="true"]{background:#eff6fd;color:#205e9d}
+.fancy-select-empty{padding:13px 12px;color:#8796a9;font-size:11px;text-align:center}
+@media(max-width:700px){.fancy-select-menu{max-height:210px}.fancy-select-input{font-size:12px}}

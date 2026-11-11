@@ -46,6 +46,46 @@ function renderBalanceChart(data){
 function typeBadge(t){return `<span class="badge ${t==="DEBT"?"debt":"rec"}">${t==="DEBT"?"Hutang saya":"Piutang saya"}</span>`}
 function statusBadge(s){return `<span class="badge ${s==="LUNAS"?"paid":"open"}">${s}</span>`}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+// Searchable dropdown presentation layered over original select controls.
+// Original select elements remain the source of truth for existing app logic.
+const fancySelectControls={};
+function syncFancySelect(id){
+  const select=$(id),control=fancySelectControls[id];if(!select||!control)return;
+  const option=select.options[select.selectedIndex];
+  control.input.value=option&&option.value?option.textContent.trim():"";
+  control.input.placeholder=option&&option.value?"Pilih atau cari...":(select.options[0]?.textContent.trim()||"Pilih salah satu...");
+  control.render();
+}
+function initFancySelect(id){
+  const select=$(id);if(!select||fancySelectControls[id])return;
+  const wrap=document.createElement("div");wrap.className="fancy-select";
+  const input=document.createElement("input");input.type="text";input.className="fancy-select-input";input.autocomplete="off";input.setAttribute("role","combobox");input.setAttribute("aria-expanded","false");input.setAttribute("aria-autocomplete","list");
+  const menu=document.createElement("div");menu.className="fancy-select-menu hidden";menu.setAttribute("role","listbox");
+  select.insertAdjacentElement("afterend",wrap);wrap.append(input,menu);select.classList.add("fancy-native-select");
+  if(select.required){input.required=true;select.required=false;}
+  const control={select,wrap,input,menu,render(){
+    const q=input.value.trim().toLocaleLowerCase("id-ID");
+    const options=[...select.options].filter((o,i)=>i>0||o.value).filter(o=>!q||o.textContent.toLocaleLowerCase("id-ID").includes(q));
+    menu.innerHTML=options.length?options.map(o=>`<button type="button" class="fancy-select-option" role="option" aria-selected="${o.value===select.value}" data-value="${esc(o.value)}">${esc(o.textContent.trim())}</button>`).join(""):'<div class="fancy-select-empty">Tidak ada pilihan yang cocok.</div>';
+    menu.querySelectorAll("[data-value]").forEach(button=>button.addEventListener("click",()=>{
+      select.value=button.dataset.value;select.dispatchEvent(new Event("change",{bubbles:true}));
+      input.value=select.options[select.selectedIndex]?.textContent.trim()||"";close();
+    }));
+  }};
+  fancySelectControls[id]=control;
+  function open(){control.render();menu.classList.remove("hidden");wrap.classList.add("is-open");input.setAttribute("aria-expanded","true")}
+  function close(){menu.classList.add("hidden");wrap.classList.remove("is-open");input.setAttribute("aria-expanded","false")}
+  input.addEventListener("focus",()=>{input.value="";open()});
+  input.addEventListener("blur",()=>{if(!wrap.contains(document.activeElement)){close();input.value=select.options[select.selectedIndex]?.textContent.trim()||""}});
+  input.addEventListener("click",open);
+  input.addEventListener("input",open);
+  input.addEventListener("keydown",e=>{if(e.key==="Escape"){close();syncFancySelect(id)}else if(e.key==="Enter"){e.preventDefault();const first=menu.querySelector("[data-value]");if(first)first.click()}else if(e.key==="ArrowDown"){e.preventDefault();open();menu.querySelector("[data-value]")?.focus()}});
+  select.addEventListener("change",()=>syncFancySelect(id));
+  document.addEventListener("click",e=>{if(!wrap.contains(e.target)){close();if(document.activeElement!==input)input.value=select.options[select.selectedIndex]?.textContent.trim()||""}});
+  syncFancySelect(id);
+}
+["debtType","payType","projectSource"].forEach(initFancySelect);
 $("debtForm").addEventListener("submit",async e=>{e.preventDefault();const b=e.submitter;b.disabled=true;try{let proof=null;const f=$("debtProof").files[0];if(f){if(f.size>8*1024*1024)throw Error("Ukuran file maksimal 8 MB.");proof={name:f.name,mimeType:f.type,data:await toBase64(f)}}const r=await api("createDebt",{type:$("debtType").value,name:$("debtName").value,date:$("debtDate").value,dueDate:$("dueDate").value,amount:$("debtAmount").value,description:$("debtDesc").value,proof});if(!r.ok)throw Error(r.error);lastReceipt={kind:"TRANSAKSI HUTANG / PIUTANG",record:r.record};$("savedCode").classList.remove("hidden");$("savedCode").innerHTML=`Transaksi tersimpan. Kode unik Anda: <b>${esc(r.code)}</b> — simpan kode ini untuk pembayaran berikutnya.`;$("printNew").disabled=false;toast("Transaksi berhasil disimpan.");$("debtForm").reset();$("debtDate").value=today();loadDebts();loadDashboard()}catch(err){toast(err.message)}finally{b.disabled=false}});
 $("printNew").onclick=()=>printReceipt(lastReceipt);
 async function loadDebts(){try{const r=await api("listDebts",{type:$("debtFilter").value,query:$("debtSearch").value});if(!r.ok)throw Error(r.error);$("debtRows").innerHTML=r.records.length?r.records.map(x=>`<tr><td><strong>${esc(x.code)}</strong></td><td>${esc(x.date)}</td><td>${esc(x.name)}</td><td>${typeBadge(x.type)}</td><td>${money(x.amount)}</td><td>${money(x.remaining)}</td><td>${statusBadge(x.status)}</td><td><button class="text-btn" data-code="${esc(x.code)}">Kwitansi</button></td></tr>`).join(""):`<tr><td colspan="8" class="empty">Belum ada transaksi.</td></tr>`;$("debtRows").querySelectorAll("[data-code]").forEach(b=>b.onclick=async()=>{const d=await api("lookupCode",{code:b.dataset.code});if(d.ok)printReceipt({kind:"DETAIL TRANSAKSI",record:d.record,payments:d.payments})})}catch(e){toast(e.message)}}
@@ -67,7 +107,7 @@ async function showDebtSuggestions(){
 }
 async function selectDebtSuggestion(code){$("payCode").value=code;$("debtCodeDropdown").classList.add("hidden");await lookup()}
 
-async function lookup(){try{const r=await api("lookupCode",{code:$("payCode").value});if(!r.ok)throw Error(r.error);currentRecord=r.record;$("payType").value=r.record.type;$("lookupResult").classList.remove("hidden");$("lookupResult").innerHTML=`<b>${esc(r.record.name)}</b> • ${typeBadge(r.record.type)}<br>Keterangan: ${esc(r.record.description||"-")}<br>Nominal awal: <b>${money(r.record.amount)}</b> &nbsp; Sisa: <b>${money(r.record.remaining)}</b> &nbsp; Status: ${statusBadge(r.record.status)}`;$("payAmount").max=r.record.remaining;$("payAmount").placeholder="Maksimal "+money(r.record.remaining);$("paymentRows").innerHTML=r.payments.length?r.payments.map(p=>`<tr><td>${esc(p.code)}</td><td>${esc(p.date)}</td><td>${esc(r.record.name)}</td><td>${money(p.amount)}</td><td>${money(r.record.remaining)}</td><td>${p.proofUrl?`<a class="proof-link" target="_blank" href="${esc(p.proofUrl)}">Lihat bukti ↗</a>`:"—"}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Belum ada pembayaran untuk kode ini.</td></tr>`;toast("Data transaksi ditemukan.")}catch(e){currentRecord=null;$("lookupResult").classList.remove("hidden");$("lookupResult").textContent=e.message}}
+async function lookup(){try{const r=await api("lookupCode",{code:$("payCode").value});if(!r.ok)throw Error(r.error);currentRecord=r.record;$("payType").value=r.record.type;syncFancySelect("payType");$("lookupResult").classList.remove("hidden");$("lookupResult").innerHTML=`<b>${esc(r.record.name)}</b> • ${typeBadge(r.record.type)}<br>Keterangan: ${esc(r.record.description||"-")}<br>Nominal awal: <b>${money(r.record.amount)}</b> &nbsp; Sisa: <b>${money(r.record.remaining)}</b> &nbsp; Status: ${statusBadge(r.record.status)}`;$("payAmount").max=r.record.remaining;$("payAmount").placeholder="Maksimal "+money(r.record.remaining);$("paymentRows").innerHTML=r.payments.length?r.payments.map(p=>`<tr><td>${esc(p.code)}</td><td>${esc(p.date)}</td><td>${esc(r.record.name)}</td><td>${money(p.amount)}</td><td>${money(r.record.remaining)}</td><td>${p.proofUrl?`<a class="proof-link" target="_blank" href="${esc(p.proofUrl)}">Lihat bukti ↗</a>`:"—"}</td></tr>`).join(""):`<tr><td colspan="6" class="empty">Belum ada pembayaran untuk kode ini.</td></tr>`;toast("Data transaksi ditemukan.")}catch(e){currentRecord=null;$("lookupResult").classList.remove("hidden");$("lookupResult").textContent=e.message}}
 $("payForm").addEventListener("submit",async e=>{e.preventDefault();if(!currentRecord||currentRecord.code!==$("payCode").value.trim().toUpperCase()){toast("Cari kode transaksi terlebih dahulu.");return}const b=e.submitter;b.disabled=true;try{let proof=null;const f=$("proofFile").files[0];if(f){if(f.size>8*1024*1024)throw Error("Ukuran file maksimal 8 MB.");proof={name:f.name,mimeType:f.type,data:await toBase64(f)}}const r=await api("pay",{code:currentRecord.code,date:$("payDate").value,amount:$("payAmount").value,note:$("payNote").value,proof});if(!r.ok)throw Error(r.error);lastReceipt={kind:"KWITANSI PEMBAYARAN",record:r.record,payment:{date:$("payDate").value,amount:Number($("payAmount").value),note:$("payNote").value,proofUrl:r.proofUrl,paymentId:r.paymentId}};$("printPay").disabled=false;toast(r.status==="LUNAS"?"Pembayaran berhasil. Transaksi LUNAS.":"Pembayaran angsuran berhasil.");$("payAmount").value="";$("payNote").value="";$("proofFile").value="";await lookup();loadDashboard()}catch(err){toast(err.message)}finally{b.disabled=false}});
 function toBase64(file){return new Promise((resolve,reject)=>{const rd=new FileReader();rd.onload=()=>resolve(String(rd.result).split(",")[1]);rd.onerror=reject;rd.readAsDataURL(file)})}
 $("printPay").onclick=()=>printReceipt(lastReceipt);
@@ -109,7 +149,7 @@ async function loadProjectIncomeList(){
       return `<tr><td><b>${esc(x.code)}</b></td><td>${esc(x.date)}</td><td>${esc(x.projectName)}</td><td>${money(x.amount)}</td><td>${money(spent)}</td><td>${money(x.remaining)}</td><td><span class="badge ${x.remaining>0?"open":"paid"}">${x.remaining>0?"TERSEDIA":"HABIS"}</span></td><td><button class="text-btn" data-project-code="${esc(x.code)}">Detail / Kwitansi</button> <button class="text-btn" data-use-code="${esc(x.code)}">Uang keluar</button></td></tr>`
     }).join(""):`<tr><td colspan="8" class="empty">Belum ada uang masuk project.</td></tr>`;
     $("projectIncomeRows").querySelectorAll("[data-project-code]").forEach(b=>b.onclick=()=>showProjectDetail(b.dataset.projectCode));
-    $("projectIncomeRows").querySelectorAll("[data-use-code]").forEach(b=>b.onclick=async()=>{$("projectSource").value=b.dataset.useCode;await loadProjectSourceInfo();$("projectSource").scrollIntoView({behavior:"smooth",block:"center"})});
+    $("projectIncomeRows").querySelectorAll("[data-use-code]").forEach(b=>b.onclick=async()=>{$("projectSource").value=b.dataset.useCode;syncFancySelect("projectSource");await loadProjectSourceInfo();$("projectSource").scrollIntoView({behavior:"smooth",block:"center"})});
     let expenses=[];
     for(const x of all){const d=await api("projectLookup",{code:x.code});if(d.ok)expenses=expenses.concat(d.expenses||[])}
     expenses.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
@@ -119,6 +159,7 @@ async function loadProjectIncomeList(){
 async function refreshProjectSources(){
   try{const r=await api("listProjectIncome",{availableOnly:true});if(!r.ok)throw Error(r.error);
     $("projectSource").innerHTML='<option value="">Pilih kode uang masuk...</option>'+r.records.map(x=>`<option value="${esc(x.code)}">${esc(x.code)} · ${esc(x.projectName)} · Sisa ${money(x.remaining)}</option>`).join("");
+    syncFancySelect("projectSource");
   }catch(e){toast(e.message)}
 }
 $("projectSource").onchange=loadProjectSourceInfo;
