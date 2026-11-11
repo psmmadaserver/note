@@ -78,10 +78,22 @@
     <section id="projectsPage" class="page hidden">
       
       <div class="project-stats">
-        <article class="project-stat stat-income"><span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18m-7-7 7 7 7-7"/></svg></span><small>Total uang masuk</small><strong id="projectTotalIn">Rp0</strong></article>
-        <article class="project-stat stat-expense"><span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21V3m-7 7 7-7 7 7"/></svg></span><small>Total uang keluar</small><strong id="projectTotalOut">Rp0</strong></article>
-        <article class="project-stat stat-balance"><span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h18v13H3zM3 7l3-4h12l3 4M16 14h2"/></svg></span><small>Sisa dana project</small><strong id="projectBalance">Rp0</strong></article>
-        <article class="project-stat stat-active"><span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1m1-10a3 3 0 1 0 0-6m2 9a5 5 0 0 1 3 5v1"/></svg></span><small>Sumber dana aktif</small><strong id="projectActive">0</strong></article>
+        <article class="project-stat stat-in">
+          <span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M5 20h14"/></svg></span>
+          <div class="project-stat-copy"><small>Total uang masuk</small><strong id="projectTotalIn">Rp0</strong></div>
+        </article>
+        <article class="project-stat stat-out">
+          <span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21V8m-5 5 5-5 5 5M5 4h14"/></svg></span>
+          <div class="project-stat-copy"><small>Total uang keluar</small><strong id="projectTotalOut">Rp0</strong></div>
+        </article>
+        <article class="project-stat stat-balance">
+          <span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5l9 4.5 9-4.5M12 12v9"/></svg></span>
+          <div class="project-stat-copy"><small>Sisa dana project</small><strong id="projectBalance">Rp0</strong></div>
+        </article>
+        <article class="project-stat stat-active">
+          <span class="project-stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 20v-1.5A4.5 4.5 0 0 1 8 14h2a4.5 4.5 0 0 1 4.5 4.5V20M16 5.5a3 3 0 0 1 0 5.8M17 14h1a3 3 0 0 1 3 3v3"/></svg></span>
+          <div class="project-stat-copy"><small>Sumber dana aktif</small><strong id="projectActive">0</strong></div>
+        </article>
       </div>
       <div class="project-columns">
         <details class="form-card project-dropdown">
